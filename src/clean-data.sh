@@ -18,5 +18,5 @@ if {
 }; then
     echo "Copy to archive completed."
     # If everything copied OK, delete the old files.
-    # source .clean-data.sh
+    source .clean-data.sh
 fi
