@@ -29,8 +29,7 @@ then
    git submodule update --init
 fi
 
-# updating PeriodSuite in submodule
-git submodule update --remote --rebase
+# Ensure PeriodSuite is on the sage9 branch.
 cd $pathToSuite
 git checkout sage9
 ./make
