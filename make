@@ -21,7 +21,7 @@ pathToNNLib="$pathToSrc/neural-network/SpecialModels"
 
 
 ##############################################
-# Initialize PeriodSuite
+# Initialize PeriodSuite and other submodules
 ##############################################
 
 if ! [ -f $pathToSuite/suite.mag ]
