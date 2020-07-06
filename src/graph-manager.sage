@@ -173,7 +173,7 @@ logging.basicConfig(filename='process-status/error.log', level=logging.INFO)
 
 ## Load dependencies.
 load("sage/user_interface.py")
-load("sage/period-tree.py")
+#load("sage/period-tree.py")
 load("sage/phase_I_util.py")
 load("sage/quartic_utilities.sage")
 load("sage/job_generators.sage")
