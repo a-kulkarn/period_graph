@@ -4,6 +4,7 @@ Saves and parallelizes computations of periods of (quartic) hypersurfaces
 ## Prerequisites
 - Magma v2.24 or later
 - Sage 9.1
+- PeriodSuite: https://github.com/emresertoz/PeriodSuite
 
 ## Installation
 1) Clone the repository
