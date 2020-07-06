@@ -1,12 +1,13 @@
 #!/bin/bash
 
-cd src
 currentDir=$(pwd)
+pathToRepo=$(pwd)
+cd src
+
 
 cd $(dirname $0)
 pathToSrc=$(pwd)
-cd ..
-pathToRepo=$(pwd)
+
 
 # Set the path to PeriodSuite
 pathToSuite="$pathToSrc/suite"
@@ -19,7 +20,7 @@ fi
 # updating PeriodSuite in submodule
 git submodule update --remote --rebase
 cd $pathToSuite
-git checkout master
+git checkout sage9
 ./make
 
 cd $pathToSrc
@@ -145,4 +146,3 @@ cd $pathToSrc
 magma -b magma/initialize-fermat.m
 
 cd $currentDir
-cd ..

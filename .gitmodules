@@ -1,0 +1,3 @@
+[submodule "src/suite"]
+	path = src/suite
+	url = https://github.com/emresertoz/PeriodSuite.git
