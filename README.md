@@ -18,9 +18,9 @@ The main exported functionality of this package are the functions
 
 Function     | Description
 ------------ | -------------
-* ivps(E)              | Constructs the Picard-Fuchs ODEs associated to the pencils of quartic surfaces specified by E.
-* first_ivps(E)        | Constructs only the first Picard-Fuchs ODE associated to the pencils of quartic surfaces specified by E.
-* integrate_odes(E)    | Solves the initial value problems set up by the previous function.
-* nn_sort              | Uses a neural network to anticipate the difficulty of running ivps, and sorts elements of E according to preceived feasibility.
-* create_training_data | 
-* train_AI             | Attempts to train a neural network using the data generated in the previous step. Training options are specified by the file `NNCONFIG.py`
+ivps(E)              | Constructs the Picard-Fuchs ODEs associated to the pencils of quartic surfaces specified by E.
+first_ivps(E)        | Constructs only the first Picard-Fuchs ODE associated to the pencils of quartic surfaces specified by E.
+integrate_odes(E)    | Solves the initial value problems set up by the previous function.
+nn_sort              | Uses a neural network to anticipate the difficulty of running ivps, and sorts elements of E according to preceived feasibility.
+create_training_data | 
+train_AI             | Attempts to train a neural network using the data generated in the previous step. Training options are specified by the file `NNCONFIG.py`
