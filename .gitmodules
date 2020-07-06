@@ -1,3 +1,6 @@
 [submodule "src/suite"]
 	path = src/suite
 	url = https://github.com/emresertoz/PeriodSuite.git
+[submodule "src/neural-network/SpecialModels"]
+	path = src/neural-network/SpecialModels
+	url = https://github.com/a-kulkarn/pg_archived_neural_networks.git

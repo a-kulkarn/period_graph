@@ -1,5 +1,9 @@
 #!/bin/bash
 
+##############################################
+# Initialize Paths
+##############################################
+
 currentDir=$(pwd)
 pathToRepo=$(pwd)
 cd src
@@ -8,9 +12,17 @@ cd src
 cd $(dirname $0)
 pathToSrc=$(pwd)
 
-
 # Set the path to PeriodSuite
 pathToSuite="$pathToSrc/suite"
+
+# Set the path to the neural network library
+pathToNNLib="$pathToSrc/neural-network/SpecialModels"
+
+
+
+##############################################
+# Initialize PeriodSuite
+##############################################
 
 if ! [ -f $pathToSuite/suite.mag ]
 then
@@ -22,6 +34,12 @@ git submodule update --remote --rebase
 cd $pathToSuite
 git checkout sage9
 ./make
+
+
+
+##############################################
+# Initialize Data and logging directories
+##############################################
 
 cd $pathToSrc
 mkdir process-status
@@ -43,9 +61,21 @@ mkdir periods
 mkdir edge-data-unlabelled
 mkdir neural-network/__pycache__
 mkdir neural-network/SavedModels
-mkdir neural-network/SpecialModels
 mkdir neural-network/TrainingOutputs
 mkdir neural-network/EvalOutputs
+
+
+
+##############################################
+# Create config files.
+##############################################
+
+cd $pathToSrc
+
+
+###################
+# SAGE_CONFIG     #
+###################
 
 # set directory names in sage
 cat > SAGE_CONFIG.py << EOF
@@ -58,6 +88,11 @@ DCM_ALARM = 10
 DIGIT_PRECISION = 300
 EOF
 
+
+###################
+# MAGMA_CONFIG    #
+###################
+
 # set directory names in magma
 # set alarm times for magma computations
 cat > magma/MAGMA_CONFIG << EOF
@@ -65,6 +100,11 @@ SRC_ABS_PATH := "$pathToSrc/";
 SUITE_FILE := "$pathToSuite/suite.mag";
 ONLY_FIRST := false;
 EOF
+
+
+###################
+# NNCONFIG        #
+###################
 
 cat > neural-network/NNCONFIG.py << EOF
 NN_PATH = "$pathToSrc/neural-network/"
@@ -114,6 +154,11 @@ DoPCA = True
 
 EOF
 
+
+##############################################
+# Create external module handles.
+##############################################
+
 # fix the name for the interface.sage
 cd $pathToRepo
 
@@ -133,16 +178,16 @@ load(SELF_PATH + "interface.sage")
 EOF
 
 
-# sed -i.backup "1,2d" interface.sage
-# sed -i.backup "1i\\
-# PYTHON3_BIN    = \"$(which python3)\"
-# " ${pathToRepo}"/interface.sage"
-# sed -i.backup "1i\\
-# SELF_PATH    = \"${pathToRepo}"/"\"
-# " ${pathToRepo}"/interface.sage"
+##############################################
+# Initialize suite's Fermat directory
+##############################################
 
 cd $pathToSrc
 # Run magma to initialize the Fermat directory
 magma -b magma/initialize-fermat.m
+
+##############################################
+# Cleanup
+##############################################
 
 cd $currentDir
