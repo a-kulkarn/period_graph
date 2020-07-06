@@ -31,7 +31,6 @@
 *.py~
 *.md~
 *make~
-period-tree-data-generation/*
 
 src/Z-integration-return-codes.sobj
 src/carry-periods.sage.backup
@@ -68,3 +67,5 @@ src/magma/MAGMA_CONFIG~
 src/archive/
 *.backup
 *__init__.sage*
+__init__.py
+tests/.test_quartics
