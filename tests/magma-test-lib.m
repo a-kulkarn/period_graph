@@ -49,7 +49,7 @@ function ComparePeriodsTest(bundle1, bundle2)
     assert Ncols(pers1) eq Ncols(pers2);
     assert Nrows(pers1) eq Nrows(pers2);
 
-    return isomorphism_of_k3s(bundle1, bundle2);
+    return iso_of_k3s(bundle1, bundle2);
 end function;
 
 
