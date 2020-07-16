@@ -8,9 +8,11 @@ import numpy as np
 load(SRC_ABS_PATH + "sage/phase_I_util.py")  # Needed for nn_sort.
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
 load(SRC_ABS_PATH + "integrate_edge_odes.sage")
-load(SRC_ABS_PATH + "carry-periods.sage")
+#load(SRC_ABS_PATH + "carry-periods.sage")
+from src.carry_periods import *
 load(SRC_ABS_PATH + "sage/to_AI_pipe.sage")
 load(SRC_ABS_PATH + "sage/sage_data_handling.sage")
+
 
 ############################################################################################
 # Testing

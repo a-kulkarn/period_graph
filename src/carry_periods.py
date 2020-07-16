@@ -1,8 +1,11 @@
 
 from SAGE_CONFIG import *
+from sage.all import *
 
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
-load(SRC_ABS_PATH + "post-integration-analysis.sage")
+
+from src.post_integration_graph import *
+#load(SRC_ABS_PATH + "post-integration-analysis.sage")
 
 # Load the ARBMatrixWrap class
 load(pathToSuite+"arb_matrix_cereal_wrap.sage")
@@ -28,7 +31,7 @@ def get_transition_mat(e):
     if edata.direction() == 'forward':
         return tm
     else:
-        return tm^(-1)
+        return tm.inverse()
 
 def permutation_matrix_auf_list(perm_as_list):
     A = zero_matrix(ZZ, len(perm_as_list))
@@ -108,7 +111,7 @@ def save_periods_magma(v, periods):
             if maximal_error == 0:
                 # For a default precision, use the value  stored in the base ring of the arb_matrix
                 bit_precision      = periods.base_ring().precision()
-                attained_precision = floor(log(2^bit_precision, 10))
+                attained_precision = floor(log(2 ** bit_precision, 10))
             else:
                 attained_precision = -maximal_error.log(10).round()
 
@@ -121,9 +124,9 @@ def save_periods_magma(v, periods):
             print("Writing the periods to file.")
             numrows = periods_mid.nrows()
             numcols = periods_mid.ncols()
-            for i in [1..numrows]:
-                output_file.write(str(periods_mid[i-1].list()))
-                if i < numrows: output_file.write("\n")
+            for i in range(numrows):
+                output_file.write(str(periods_mid[i].list()))
+                if i < numrows-1: output_file.write("\n")
 ####
 
 # TODO: Abolish this global scope/load nonsense. This is *horrible* design.
@@ -131,9 +134,8 @@ def save_periods_magma(v, periods):
 # in integrator.sage.
 d = 4
 fermat_type = [1,1,1,1]
-bit_precision = ceil(log(10^DIGIT_PRECISION, 2))
+bit_precision = ceil(log(10 ** DIGIT_PRECISION, 2))
 ncpus = 8
-
 
 # Basic initialization
 def initialize_fermat_directory():
@@ -244,7 +246,7 @@ def carry_periods_along_path(pe):
             # Apply the transformation.
             new_per = tm*source_per
         ## end if 
-            
+
         # Save the new periods to the file.
         save_periods(e[1].quartic_string(), new_per)
         save_periods_magma(e[1].quartic_string(), new_per)
