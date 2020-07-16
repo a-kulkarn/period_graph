@@ -4,11 +4,9 @@ from SAGE_CONFIG import *
 import numpy as np
 
 # Stupid imports (should be pure python in the future).
-#execfile(SRC_ABS_PATH + "sage/period-tree.py")
 load(SRC_ABS_PATH + "sage/phase_I_util.py")  # Needed for nn_sort.
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
-load(SRC_ABS_PATH + "integrate_edge_odes.sage")
-#load(SRC_ABS_PATH + "carry-periods.sage")
+import src.integrator
 from src.carry_periods import *
 load(SRC_ABS_PATH + "sage/to_AI_pipe.sage")
 load(SRC_ABS_PATH + "sage/sage_data_handling.sage")
@@ -298,7 +296,7 @@ def construct_edge_odes(opts={'generator':'file', 'forgo-manifest':None}):
 
 
 def integrate_edge_odes(opts={'generator':'file'}):
-    _integrate_edge_odes(**opts)
+    src.integrator._integrate_edge_odes(**opts)
     #subprocess.call(["sage", "integrate-edge-odes.sage"] + format_subproc_opts(opts),
     #                cwd=SRC_ABS_PATH)
 

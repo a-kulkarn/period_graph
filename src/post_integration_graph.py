@@ -77,7 +77,7 @@ def load_phase_III_graph(directed=True, allow_weak_edges=True):
     return G
 
 
-def _my_phaseIII(weak=True, isolated_vertices=True):
+def my_phaseIII(weak=True, isolated_vertices=True):
     H3 = load_phase_III_graph(directed=True, allow_weak_edges=weak)
 
     if isolated_vertices:

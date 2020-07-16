@@ -1,6 +1,8 @@
 
 import subprocess
 from SAGE_CONFIG import *
+from sage.all import *
+
 load(SRC_ABS_PATH + "sage/arg_saver.py")
 
 USER_EDGES_FILE = "user_input/user_edges"
@@ -80,10 +82,10 @@ def integration_job_list(**job_config):
 def _integrate_edge_odes(**job_config):
     # Integrate
     joblist = integration_job_list(**job_config)
-    results = integrate_odes_in_directory(joblist)
+    results = list(integrate_odes_in_directory(joblist))
 
-    old_retc = _load_integration_return_codes()
-    _save_integration_return_codes(results, old_retc)
+    #old_retc = _load_integration_return_codes()
+    #_save_integration_return_codes(results, old_retc)
     return
 
 
@@ -91,18 +93,18 @@ def _integrate_edge_odes(**job_config):
 # OSBOLETE: Return code functionality.
 #################################################################
 
-def _load_integration_return_codes():
-    try:
-        retc = load('Z-integration-return-codes.sobj')
-        prev_args = [x[0][0][0] for x in retc]
-    except IOError:
-        retc = []
-        prev_args = []
-    return retc
+# def _load_integration_return_codes():
+#     try:
+#         retc = load('Z-integration-return-codes.sobj')
+#         prev_args = [x[0][0][0] for x in retc]
+#     except IOError:
+#         retc = []
+#         prev_args = []
+#     return retc
     
 
-def _save_integration_return_codes(results, retc):
-    # Save the return codes for analysis
-    results_list = list(results) + retc
-    save(results_list, "Z-integration-return-codes")
+# def _save_integration_return_codes(results, retc):
+#     # Save the return codes for analysis
+#     results_list = list(results) + retc
+#     save(results_list, "Z-integration-return-codes")
 
