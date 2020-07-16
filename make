@@ -114,7 +114,7 @@ EOF
 cat > neural-network/NNCONFIG.py << EOF
 NN_PATH = "$pathToSrc/neural-network/"
 INPUT_DIR = "$pathToRepo/training-data/"
-SAGE_INPUT_DIR = "$pathToSrc/edge-data-unlabelled/"
+SAGE_INPUT_DIR = "$pathToRepo/neural_network_input/"
 PYTHON3_LOCAL_SITE_PKG = "$HOME/.local/lib/python3.7/site-packages/"
 
 # Data management parameters.

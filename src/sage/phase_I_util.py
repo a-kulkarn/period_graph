@@ -84,7 +84,7 @@ def write_nn_data(suffix, data, issuccess):
                  "DCM10-"+suffix+".csv"]
     
     if issuccess == None:
-        dirname += "edge-data-unlabelled/"
+        dirname = os.path.join(SELF_PATH, "neural_network_input/", "")
     elif issuccess:
         dirname += "edge-data/"
         filenames.append("partial-timingsX-"+suffix+".csv")

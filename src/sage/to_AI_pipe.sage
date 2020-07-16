@@ -21,7 +21,7 @@ def send_jobs_to_AI(E):
 
     # Clean data out of the directory.
     for fname in ["DCM01-AI.csv", "DCM10-AI.csv", "edgesX-AI.csv"]:
-        dir_plus_file = SRC_ABS_PATH + "edge-data-unlabelled/" + fname
+        dir_plus_file = SELF_PATH + "neural_network_input/" + fname
         if os.path.exists(dir_plus_file):
             os.remove(dir_plus_file)
         
