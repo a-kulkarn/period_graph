@@ -5,6 +5,7 @@
 # SET CURRENT WORKING DIRECTORY.
 import os, sys, getopt
 os.chdir(sys.path[0])
+from SAGE_CONFIG import *
 
 # CONSTANTS
 
