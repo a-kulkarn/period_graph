@@ -13,8 +13,8 @@ RANDOM_ROOT_INIT = True
 TIMEOUT      = 5
 UPDATETIME   = 10
 BUFFERSIZE   = 500
-LOGNAME      = "process-status/process.log"
-STATUSFILE   = 'process-status/state.status'
+LOGNAME      = "../process-status/process.log"
+STATUSFILE   = '../process-status/state.status'
 USER_EDGES_FILE = "user_input/user_edges"
 
 HELP_STRING = (
@@ -84,12 +84,11 @@ import pickle
 # Make sure that errors in the subprocess are raised properly.
 import traceback
 import logging
-logging.basicConfig(filename='error.log', level=logging.ERROR)
+logging.basicConfig(filename='../process-status/error.log', level=logging.ERROR)
 
 
 ## Load dependencies.
 load("sage/user_interface.py")
-#load("sage/period-tree.py")
 load("sage/phase_I_util.py")
 load("sage/quartic_utilities.sage")
 load("sage/job_generators.sage")
