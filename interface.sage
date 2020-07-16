@@ -281,12 +281,7 @@ def interface_help():
 
 
 def create_training_data(opts={'generator':'file'}):
-    subprocess.call(["sage", "graph-manager.sage"] + format_subproc_opts(opts),
-                    cwd=SRC_ABS_PATH)
-
-
-def construct_first_edge_odes(opts={'generator':'file'}):
-    subprocess.call(["sage", "graph-manager.sage"] + format_subproc_opts(opts),
+    subprocess.call(["sage", "create-training-data.sage"] + format_subproc_opts(opts),
                     cwd=SRC_ABS_PATH)
 
 
