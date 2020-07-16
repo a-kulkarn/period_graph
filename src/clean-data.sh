@@ -1,7 +1,7 @@
 #!bash
 # Moves output files from the output directories to the archive.
 
-dirname=archive/$(tr ' ' '_' <<< $(date))
+dirname=../archive/$(tr ' ' '_' <<< $(date))
 mkdir $dirname
 
 if {

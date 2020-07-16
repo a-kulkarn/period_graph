@@ -10,6 +10,8 @@ fail_data_string = "30000, 1000, 1000"
 ERROR_CODE = 1
 ALARM_CLOCK_CODE = -14
 
+# Data
+TRAINING_PATH = os.path.join(SELF_PATH, "training-data", "")
 
 #################################################################################################
 ## Neural Network data / magma parsing.
@@ -76,7 +78,7 @@ def write_nn_data(suffix, data, issuccess):
     # 0. Decide on the writing mode (success, fail, None). Note a 'Differentiate Cohomology fail'
     #    is handled separately. `None` represents unlabelled data.
 
-    dirname = SRC_ABS_PATH
+    dirname = TRAINING_PATH
     filenames = ["edgesX-"+suffix+".csv",
                  "DCM01-"+suffix+".csv",
                  "DCM10-"+suffix+".csv"]
@@ -163,7 +165,9 @@ def edge_traversable(suffix, v, w, entropy_bias=None):
         elif e.returncode == ALARM_CLOCK_CODE:
             # The X-label for the Neural network data failed to compute.
             # This goes into the bin of terrible inputs.
-            with open("DifferentiateCohomology-failed/tree"+suffix+"DCfail", 'a') as F:
+            dcm_fail_path = os.path.join(TRAINING_PATH, "process"+suffix+"DCfail")
+            
+            with open(dcm_fail_path, 'a') as F:
                 F.write((str(v)+', '+str(w)+'\n').translate(None, '[]'))
 
         return False

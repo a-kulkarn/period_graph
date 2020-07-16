@@ -40,17 +40,23 @@ git checkout sage9
 # Initialize Data and logging directories
 ##############################################
 
-cd $pathToSrc
+cd $pathToRepo
+mkdir training-data
 mkdir process-status
+mkdir archive
+
+cd training-data
 mkdir edge-data
-mkdir vertex-data
-mkdir output-files
 mkdir failed-edges
 mkdir DifferentiateCohomology-failed
+
+
+cd $pathToSrc
+mkdir vertex-data
 mkdir root-quartics
 mkdir user_input
 mkdir quartics-cache
-mkdir archive
+
 
 # Integration phase
 mkdir ode-data
@@ -78,6 +84,7 @@ cd $pathToSrc
 
 # set directory names in sage
 cat > SAGE_CONFIG.py << EOF
+SELF_PATH = "$pathToRepo"
 SRC_ABS_PATH = "$pathToSrc/"
 pathToSuite = "$pathToSuite/"
 PHASE_I_ALARM  = 30;
@@ -107,7 +114,7 @@ EOF
 
 cat > neural-network/NNCONFIG.py << EOF
 NN_PATH = "$pathToSrc/neural-network/"
-INPUT_DIR = "$pathToSrc/edge-data-unlabelled/"
+INPUT_DIR = "$pathToRepo/training-data/"
 SAGE_INPUT_DIR = "$pathToSrc/edge-data-unlabelled/"
 PYTHON3_LOCAL_SITE_PKG = "$HOME/.local/lib/python3.7/site-packages/"
 
