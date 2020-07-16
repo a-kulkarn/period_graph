@@ -1,8 +1,13 @@
 
 from SAGE_CONFIG import *
+from sage.all import *
+import os
 
 # Load the ARBMatrixWrap class
 load(pathToSuite+"arb_matrix_cereal_wrap.sage")
+
+# Load the first stage analysis dependency.
+load(SRC_ABS_PATH + "first-stage-analysis.sage")
 
 ###################################################
 # Construction of Graph
@@ -16,7 +21,6 @@ def parse_vtx_string(s):
 def parse_ret_code(c):
     return c[0][0][0].strip('ode-data').strip('/')
 
-import os
 def reconstruct_return_codes():
     retc = []    
     for dirname in os.listdir(SRC_ABS_PATH + "ode-data"):
