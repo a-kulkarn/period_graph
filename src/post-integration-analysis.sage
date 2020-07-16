@@ -29,7 +29,7 @@ def reconstruct_return_codes():
     return
 
 
-def load_phase_III_graph(directed=True, isolated_vertices=False, allow_weak_edges=True):
+def load_phase_III_graph(directed=True, allow_weak_edges=True):
 
     manifest = load_manifest()
     success_list = []
@@ -69,16 +69,16 @@ def load_phase_III_graph(directed=True, isolated_vertices=False, allow_weak_edge
                     G.add_edge((manifest[c][1], manifest[c][0]), label=backward_label)
         except KeyError as e:
             print("WARNING: Manifest key error: ", e)
-            
+                    
+    return G
+
+
+def _my_phaseIII(weak=True, isolated_vertices=True):
+    H3 = load_phase_III_graph(directed=True, allow_weak_edges=weak)
 
     if isolated_vertices:
         # Function defined in first stage analysis.
         add_isolated_vertices(G,[4,5])
-        
-    return G
 
-
-def _my_phaseIII(weak=True):
-    H3 = load_phase_III_graph(directed=True, isolated_vertices=True, allow_weak_edges=weak)
     insert_S4_links(H3)
     return H3
