@@ -104,7 +104,6 @@ EOF
 cat > magma/MAGMA_CONFIG << EOF
 SRC_ABS_PATH := "$pathToSrc/";
 SUITE_FILE := "$pathToSuite/suite.mag";
-ONLY_FIRST := false;
 EOF
 
 
