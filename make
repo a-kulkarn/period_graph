@@ -87,6 +87,7 @@ cat > SAGE_CONFIG.py << EOF
 SELF_PATH = "$pathToRepo/"
 SRC_ABS_PATH = "$pathToSrc/"
 pathToSuite = "$pathToSuite/"
+TRAINING_PATH = "$pathToRepo/training-data/"
 PHASE_I_ALARM  = 30;
 PHASE_II_ALARM = 21*(5*60)
 INTEGRATION_ALARM = 2*8*60

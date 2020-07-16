@@ -338,7 +338,7 @@ def clean_ode_failures():
 # Timings data
 ############################################################################################
 
-def timings_from_training_successes(folder=SRC_ABS_PATH+"edge-data", verbose=True):
+def timings_from_training_successes(folder=os.path.join(TRAINING_PATH, "edge-data"), verbose=True):
     """
     Returns a list of pairs (edge, timings), where each edge is given as a
     pair of quartic_data objects and each timings is a list [time, order, degree].
