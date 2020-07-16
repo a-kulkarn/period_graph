@@ -93,19 +93,19 @@ def save_experiment_state():
     print("Saving to state files.")
     
     for name in namen:
-        save(job_generator, 'process-status/state.job_generator'+name)
+        save(job_generator, SELF_PATH+'process-status/state.job_generator'+name)
         
         #with open('process-status/state.job_generator'+name, 'wb') as F:
         #    pickle.dump(job_generator, F)
         
-        with open('process-status/state.job_queue'+name, 'wb') as F:
+        with open(SELF_PATH+'process-status/state.job_queue'+name, 'wb') as F:
             pickle.dump(lst, F)
 
     # Restore the job queue to the original state.
     for x in lst:
         job_queue.put(x)
     
-    with open('process-status/state.status', 'w') as F:
+    with open(SELF_PATH+'process-status/state.status', 'w') as F:
         F.write("PAUSED: "+time_str)
         
     return
@@ -159,12 +159,12 @@ def send_joblist_to_AI():
 
 def load_experiment_state():
 
-    job_generator = load('process-status/state.job_generator')
+    job_generator = load(SELF_PATH+'process-status/state.job_generator')
     
     #with open('process-status/state.job_generator', 'r') as F:
     #    job_generator = pickle.load(F)
             
-    with open('process-status/state.job_queue', 'rb') as F:
+    with open(SELF_PATH+'process-status/state.job_queue', 'rb') as F:
         lst = pickle.load(F)
 
         if platform.system() == "Darwin":

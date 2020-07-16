@@ -84,7 +84,7 @@ cd $pathToSrc
 
 # set directory names in sage
 cat > SAGE_CONFIG.py << EOF
-SELF_PATH = "$pathToRepo"
+SELF_PATH = "$pathToRepo/"
 SRC_ABS_PATH = "$pathToSrc/"
 pathToSuite = "$pathToSuite/"
 PHASE_I_ALARM  = 30;
