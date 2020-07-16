@@ -1,5 +1,6 @@
 import os, sys, subprocess
 sys.path.insert(1, SELF_PATH + "src/")
+sys.path.insert(2, SELF_PATH + "src/suite/")
 from SAGE_CONFIG import *
 import numpy as np
 

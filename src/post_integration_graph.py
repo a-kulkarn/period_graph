@@ -4,7 +4,8 @@ from sage.all import *
 import os
 
 # Load the ARBMatrixWrap class
-load(pathToSuite+"arb_matrix_cereal_wrap.sage")
+#load(pathToSuite+"arb_matrix_cereal_wrap.sage")
+from src.suite import arb_matrix_cereal_wrap
 
 # Load the first stage analysis dependency.
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
