@@ -89,6 +89,7 @@ SELF_PATH = "$pathToRepo/"
 SRC_ABS_PATH = "$pathToSrc/"
 pathToSuite = "$pathToSuite/"
 TRAINING_PATH = "$pathToRepo/training-data/"
+PYTHON3_BIN = "$(which python3)"
 PHASE_I_ALARM  = 30;
 PHASE_II_ALARM = 21*(5*60)
 INTEGRATION_ALARM = 2*8*60
@@ -159,29 +160,6 @@ finetune_hyperparameters = {
 dataStream = 1 # Sampler selector.
 DoPCA = True
 
-EOF
-
-
-##############################################
-# Create external module handles.
-##############################################
-
-# fix the name for the interface.sage
-cd $pathToRepo
-
-cat > __init__.sage << EOF
-# Dumb version of python module structure. Upgrade to pure python
-# is a goal in the future release.
-SELF_PATH   = "$pathToRepo/"
-PYTHON3_BIN = "$(which python3)"
-load(SELF_PATH + "interface.sage")
-EOF
-
-cat > __init__.py << EOF
-from sage.all import *
-SELF_PATH   = "$pathToRepo/"
-PYTHON3_BIN = "$(which python3)"
-load(SELF_PATH + "interface.sage")
 EOF
 
 
