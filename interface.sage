@@ -145,7 +145,8 @@ def write_user_edges_to_file(edges):
     in 4 variables), save this list to the `user_edges` file to be read by the
     main programs. The names of the variables are changed to `x,y,z,w`.
     """
-    R.<x,y,z,w> = PolynomialRing(QQ,4)
+    R = PolynomialRing(QQ, 4, "xyzw")
+    (x,y,z,w) = R.gens()
     with open(SRC_ABS_PATH + "user_input/" + "user_edges", 'w+') as F:
         for e in edges:
             F.write("[{},{}]\n".format(R(e[0]), R(e[1])))
@@ -237,7 +238,8 @@ def load_transition_matrix(e):
     quartics), provided it exists. Raises an error otherwise.
     """
 
-    R.<x,y,z,w> = PolynomialRing(QQ,4)
+    R = PolynomialRing(QQ, 4, "xyzw")
+    (x,y,z,w) = R.gens()
     e0str = str(R(e[0]))
     e1str = str(R(e[1]))
     G = construct_phase_III_graph()
