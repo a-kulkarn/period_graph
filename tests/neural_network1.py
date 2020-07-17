@@ -2,11 +2,10 @@
 # This file tests basic usage of the neural network eval function.
 #
 
-# TODO: We need to figure out how to fix paths with regard to the tests.
 import os, subprocess
 from sage.all import *
-from __init__ import *
-TEST_PATH = os.path.join(os.path.join(SELF_PATH, "tests", ""))
+from period_graph import *
+
 
 # Setup test edges.
 R = PolynomialRing(QQ, 4, "xyzw")
