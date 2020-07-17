@@ -1,16 +1,17 @@
 import os, sys, subprocess
 from sage.all import *
 
+from period_graph.src.SAGE_CONFIG import *
 sys.path.insert(1, SELF_PATH + "src/")
 sys.path.insert(2, SELF_PATH + "src/suite/")
-from SAGE_CONFIG import *
+
 import numpy as np
 
 # Stupid imports (should be pure python in the future).
 load(SRC_ABS_PATH + "sage/phase_I_util.py")  # Needed for nn_sort.
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
-import src.integrator
-from src.carry_periods import *
+import period_graph.src.integrator
+from period_graph.src.carry_periods import *
 load(SRC_ABS_PATH + "sage/to_AI_pipe.sage")
 load(SRC_ABS_PATH + "sage/sage_data_handling.sage")
 
@@ -24,7 +25,8 @@ def load_test(testfile=SRC_ABS_PATH+"user_input/test_edges"):
     Loads a file containing a list of polynomials. Returns a list
     of homogeneous quartics in 4 variables.
     """
-    R.<x,y,z,w> = PolynomialRing(QQ,4)
+    R = PolynomialRing(QQ, 4, "xyzw")
+    (x,y,z,w) = R.gens()
     lst = []
     with open(testfile) as F:
         for line in F:
@@ -296,10 +298,8 @@ def construct_edge_odes(opts={'generator':'file', 'forgo-manifest':None}):
 
 
 def integrate_edge_odes(opts={'generator':'file'}):
-    src.integrator._integrate_edge_odes(**opts)
-    #subprocess.call(["sage", "integrate-edge-odes.sage"] + format_subproc_opts(opts),
-    #                cwd=SRC_ABS_PATH)
-
+    period_graph.src.integrator._integrate_edge_odes(**opts)
+    
 
 def run_ai_eval():
     subprocess.check_call([PYTHON3_BIN, "neural-network/AI_eval.py"],
