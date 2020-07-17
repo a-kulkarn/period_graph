@@ -9,7 +9,7 @@ from period_graph.src.post_integration_graph import *
 
 # Load the ARBMatrixWrap class
 # load(pathToSuite+"arb_matrix_cereal_wrap.sage")
-from period_graph.src.suite import arb_matrix_cereal_wrap
+from period_graph.src.suite import arb_matrix_cereal_wrap as amcw
 
 
 ###################################################
@@ -84,7 +84,7 @@ import os
 def save_periods(v, per):
     if not os.path.exists(SRC_ABS_PATH + 'periods/' + v + '/'):
         os.mkdir(SRC_ABS_PATH + 'periods/' + v + '/')
-        save(ARBMatrixCerealWrap(per), SRC_ABS_PATH + 'periods/' + v + '/' + 'periods.sobj')
+        save(amcw.ARBMatrixCerealWrap(per), SRC_ABS_PATH + 'periods/' + v + '/' + 'periods.sobj')
     return
 
 
