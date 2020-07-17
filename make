@@ -42,6 +42,7 @@ git checkout sage9
 
 cd $pathToRepo
 mkdir training-data
+mkdir neural_network_input
 mkdir process-status
 mkdir archive
 
