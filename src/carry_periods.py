@@ -4,11 +4,12 @@ from sage.all import *
 
 load(SRC_ABS_PATH + "first-stage-analysis.sage")
 
-from src.post_integration_graph import *
+from period_graph.src.post_integration_graph import *
 #load(SRC_ABS_PATH + "post-integration-analysis.sage")
 
 # Load the ARBMatrixWrap class
-load(pathToSuite+"arb_matrix_cereal_wrap.sage")
+# load(pathToSuite+"arb_matrix_cereal_wrap.sage")
+from period_graph.src.suite import arb_matrix_cereal_wrap
 
 
 ###################################################
