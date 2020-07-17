@@ -1,4 +1,6 @@
 import os, sys, subprocess
+from sage.all import *
+
 sys.path.insert(1, SELF_PATH + "src/")
 sys.path.insert(2, SELF_PATH + "src/suite/")
 from SAGE_CONFIG import *
