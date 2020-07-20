@@ -141,10 +141,11 @@ UseEvalu = OldModel       # what evaluation to analyze.
 network_architecture_hyperparameters = {
     'DoPCA' : True,
     'PCAk'  : 23,    
-    'EpochNum'  : 50,       ## how many epochs to train MLP&CNN networks
-    'BatchSize' : 1000,     ## batch size for training MLP&CNN
-    'StepSize'  : 1e-3,     ## MLP step size
-    'Balancing' : True
+    'EpochNum'    : 50,       ## how many epochs to train MLP&CNN networks
+    'BatchSize'   : 1000,     ## batch size for training MLP&CNN
+    'StepSizeMLP' : 1e-3,     ## MLP step size
+    'StepSizeCNN' : 1e-3,     ## CNN step size
+    'Balancing'   : True
 }
 
 finetune_hyperparameters = {
