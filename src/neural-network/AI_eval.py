@@ -45,7 +45,7 @@ from data_handling import *
 fnames = sorted(list(dataShape.keys()))
 sampler = BasicSampler
 
-data_set = DataSet(SAGE_INPUT_DIR, dataShape)
+data_set = DataSet(SAGE_INPUT_DIR, dataShape, ratio=None)
 
 data_gruppe, is_data_labelled = data_set.read_all()
 test_all             = ReformatData(data_gruppe,is_data_labelled, NumMats)
