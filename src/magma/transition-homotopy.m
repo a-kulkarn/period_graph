@@ -49,9 +49,9 @@ dirname := SRC_ABS_PATH * "ode-data/";
 
 
 // Setting integration to false is critical for parallelization.
-bundle := TransitionHomotopy([f0,f1] : precision:=100, integrate:=false,
-				       name:= dirname*name, overwrite:=true,
-				       bound_pole_order:=bop);
+bundle := SageAPITransitionHomotopy([f0,f1] : precision:=100, integrate:=false,
+					      name:= dirname*name, overwrite:=true,
+					      bound_pole_order:=bop);
 
 
 // Rely on a separate sage process (possibly on a different server) to do integration.
