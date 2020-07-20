@@ -122,7 +122,7 @@ PYTHON3_LOCAL_SITE_PKG = "$HOME/.local/lib/python3.7/site-packages/"
 
 # Data management parameters.
 MAX_INPUT_DATA_SIZE = "100MB"
-TRAINING_PERCENTAGE = 0.9
+ttratio = 0.9
 dataShape = {"edgesX-*.csv":2*35+1, "timingsY-*.csv":3+1, "DCM01-*.csv":21**2+1, "DCM10-*.csv":21**2+1}
 NumMats = 2
 random_seed = 132456789
