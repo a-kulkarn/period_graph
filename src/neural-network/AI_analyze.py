@@ -44,7 +44,7 @@ np.random.seed(random_seed)
 
 fnames = sorted(list(dataShape.keys()))
 
-if EVALS_DIR == "/Users/Heal/Dropbox/Research/EAK/4-monomial-complete/":
+if INPUT_DIR == "/Users/Heal/Dropbox/Research/EAK/4-monomial-complete/":
     sampler = BasicSampler
 else:
     sampler = RandomBalancedSampler
@@ -63,7 +63,7 @@ print("   Using trained model:    ", ModelNum, "\n\n***")
 #csvfile = NN_PATH+'SavedModels/train_indices'+ModelNum+'.csv'
 #indices = np.loadtxt(csvfile)
 
-test_all = ReadDataAndFormat(EVALS_DIR, dataShape, NumMats, "testing", ttratio, Sampler=sampler, verbose=False)
+test_all = ReadDataAndFormat(INPUT_DIR, dataShape, NumMats, "testing", ttratio, Sampler=sampler, verbose=False)
 #test_all = KH_circumvent(EVALS_DIR, dataShape, NumMats, "testing", ttratio, Sampler=sampler, verbose=False)
 test_x, test_y, test_M = test_all
 print(sum(test_y))
@@ -71,7 +71,7 @@ print(sum(test_y))
 #***************************************************
 ### PRINT, SAVE, AND VISUALIZE RESULTS FOR TEST DATA
 
-MB = load_model_bundle(NN_PATH+'SavedModels',ModelNum)
+MB = fetch_model(NN_PATH, ReadNewest, ModelNum)
 pCN, rCN, pNN, rNN, pEN, rEN = MB.evaluate_models(test_all)
 
 PlotsOn = True                 #broken for now TODO: Investigate?
