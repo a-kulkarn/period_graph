@@ -11,5 +11,5 @@ import period_graph.tests.training3
 
 import period_graph.tests.neural_network1
 import period_graph.tests.neural_network2
-import period_graph.tests.neural_network3
+
 

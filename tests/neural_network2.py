@@ -5,7 +5,7 @@
 # TODO: We need to figure out how to fix paths with regard to the tests.
 import os, subprocess
 from sage.all import *
-from __init__ import *
+from period_graph import SELF_PATH, nn_sort
 TEST_PATH = os.path.join(os.path.join(SELF_PATH, "tests", ""))
 
 # Setup test edges.
