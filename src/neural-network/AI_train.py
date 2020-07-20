@@ -23,15 +23,14 @@ from AI_functions import *
 #**************************************************
 # Main script.
 
-#start_time = time()
-
 sampler = RandomSampler if dataStream==1 else RandomBalancedSampler
 print("Using sampler: ", sampler.__name__)
 
 # Read and process the data.
-data = ReadDataAndFormat(INPUT_DIR, dataShape, NumMats, "training", Sampler=sampler, verbose=False)
+data = ReadDataAndFormat(INPUT_DIR, dataShape, NumMats, "training", ttratio, Sampler=sampler, verbose=False)
+#data = KH_circumvent(INPUT_DIR, dataShape, NumMats, "training", Sampler=sampler, ttratio, verbose=False)
 train_x, train_y, train_M = data
-train_M[:,:,:,1] = np.asarray([np.matmul(m,m) for m in train_M[:,:,:,0]]) ## Experiment for Emre
+print(len(train_y))
 
 if train_y is None:
     raise RuntimeError("Data in input directory is unlabelled. Directory: {}".format(INPUT_DIR))
@@ -53,7 +52,6 @@ else: #load pre-trained models from computer
     BM = finetune_bundle(old_model_bundle, data, **finetune_hyperparameters)
     paramsNN,paramsCN   = [OldModel],[OldModel]
 
-elapsed_time = 0#time() - start_time
 
 #**************************************************
 ### PRINT, SAVE, AND VISUALIZE RESULTS
@@ -61,7 +59,6 @@ elapsed_time = 0#time() - start_time
 ## write the core-indices that define the train dataset.
 #csvfile = NN_PATH+'SavedModels/train_indices'+BM.name()+'.csv'
 #csv_newest = NN_PATH+'SavedModels/train_indices_newest.csv'
-
 #np.savetxt(csvfile, indices_out, delimiter=",")
 #np.savetxt(csv_newest, indices_out, delimiter=",")
 
@@ -76,11 +73,9 @@ reference_network = "None" if not FineTuneInTraining else OldModel
 
 # Parameters that the network hasn't yet remembered about itself.
 setup_params = {"Num cohomology matrices / pair" : NumMats,
-                "Total time elapsed" : elapsed_time,
+                "Total time elapsed" : 0,
                 "Random seed" : random_seed,
-                "Training set filename" : '"{}"'.format(INPUT_DIR),
-                "Training data percentage" : TRAINING_PERCENTAGE}
+                "Training set filename" : '"{}"'.format(INPUT_DIR)}
 
 BM.save_parameters(os.path.join(NN_PATH, "SavedModels", ''), setup_dic=setup_params,
                    params_dic=network_architecture_hyperparameters, also_to_newest=True)
-

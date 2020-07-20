@@ -89,13 +89,12 @@ def train_model_bundle(data, NumMats,
 
     train_x, train_y, train_M = data
     bs, ep = BatchSize, EpochNum
-    emreon = False ##BETA. This is the vector2tensor thing.
     
     if Balancing:
         train_x,train_y,train_M = UpSampleToBalance(train_x,train_y,train_M)
 
     # Substantial data processing.
-    if DoPCA and not emreon:
+    if DoPCA:
         train_x,pca = PerformPCA(PCAk, train_x)
     else:
         pca = None
@@ -103,16 +102,9 @@ def train_model_bundle(data, NumMats,
     # ** SUPERVISED: MULTILAYER PERCEPTRON
     print("\n\nSTEP 3: Training Filter 1 (MLP using X,Y)... ")
     
-    if emreon:
-        print("\n\n********\n\n")
-        train_x = np.asarray([vector2tensor(tx) for tx in train_x])
-        print(train_x.shape)
-    
-        print("TESTING: We've replaced the MLP with an edge-CNN!!! This is in beta.")
-        NN = CNNClassifier(1,5)
-    else:
-        hlsizes,numiters,act  = (100,1000,1000,1000,1000,100,100), 100, "relu"
-        NN = MLPClassifier0(hlsizes,StepSizeMLP,act,train_x.shape[1])
+#    hlsizes,numiters,act  = (100,1000,1000,1000,1000,100,100), 100, "relu"
+    hlsizes,numiters,act  = (100,1000,1000), 100, "relu"
+    NN = MLPClassifier0(hlsizes,StepSizeMLP,act,train_x.shape[1])
 
     NN.fit(train_x, train_y, batch_size=bs, epochs=ep, verbose=1) # Main MLP-Training.
     print("        ...done.")
@@ -144,7 +136,7 @@ def CNNClassifier(k,l,ss):
          model.add(Conv2D(64, kernel_size=3, activation='relu',input_shape=(l, l, l)))
     elif l==21:
         model.add(Conv2D(64, kernel_size=3, activation='relu',input_shape=(l, l, k)))
-    model.add(Conv2D(32, kernel_size=3, activation='relu'))
+#    model.add(Conv2D(32, kernel_size=3, activation='relu'))
     model.add(Conv2D(16, kernel_size=3, activation='relu'))
     # model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())  #converts 2D feature maps to 1D feature vectors

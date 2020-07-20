@@ -63,10 +63,10 @@ print("   Using trained model:    ", ModelNum, "\n\n***")
 #csvfile = NN_PATH+'SavedModels/train_indices'+ModelNum+'.csv'
 #indices = np.loadtxt(csvfile)
 
-test_all = ReadDataAndFormat(EVALS_DIR, dataShape, NumMats, "testing", Sampler=sampler, verbose=False)
+test_all = ReadDataAndFormat(EVALS_DIR, dataShape, NumMats, "testing", ttratio, Sampler=sampler, verbose=False)
+#test_all = KH_circumvent(EVALS_DIR, dataShape, NumMats, "testing", ttratio, Sampler=sampler, verbose=False)
 test_x, test_y, test_M = test_all
-test_M[:,:,:,1] = np.asarray([np.matmul(m,m) for m in test_M[:,:,:,0]]) ## Experiment for Emre
-test_all=test_x,test_y,test_M
+print(sum(test_y))
 
 #***************************************************
 ### PRINT, SAVE, AND VISUALIZE RESULTS FOR TEST DATA

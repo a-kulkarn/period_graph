@@ -101,6 +101,7 @@ def read_file_data(filename_tuple, dataShape, subsetsz=5000):
 ###############################################################################################
 # Classes
 
+
 class DataGroup(dict):
     
     def __init__(self, *args, empty=False):
@@ -154,7 +155,7 @@ class DataSet:
     Class allowing for the manipulation of the dataset as an abstract list of
     filenames. Has methods to actually read in the data.
     """
-    def __init__(self, folder, dataShape, verbose=False):
+    def __init__(self, folder, dataShape, ratio, verbose=False):
 
 
         ####
@@ -164,8 +165,7 @@ class DataSet:
         field_globs = {field : glob.glob(os.path.join(folder,"**",field), recursive=True)
                        for field in fnames}
 
-        filename_by_field = FilenameByField({field : np.sort(field_globs[field]) for field in fnames},
-                                            dataShape)
+        filename_by_field = FilenameByField({field : np.sort(field_globs[field]) for field in fnames}, dataShape)
 
         if verbose:
             self._print_verbose_reading_info(field_globs)
@@ -187,6 +187,7 @@ class DataSet:
         # Initialize the object variables.
         self.filename_by_field = filename_by_field
         self._is_labelled = is_data_labelled
+        self._ratio = ratio  # train/test ratio
         #######
 
         
@@ -265,21 +266,19 @@ class DataSet:
 
     
     def sample_training(self, sampler):
-        self.partition(TRAINING_PERCENTAGE)
         return self._read_data(self._training_files, Sampler=sampler)
     
 
     def sample_testing(self, sampler):
-        self.partition(TRAINING_PERCENTAGE)
-        return self._read_data(self._training_files, Sampler=sampler)
+        return self._read_data(self._testing_files, Sampler=sampler)
 
     #######
     # Partitioning
     #######
     
-    def partition(self, ratio, independent=True):
+    def partition(self, independent=True):
         """
-        Partitions data into training and testing. Ratio specifies how large
+        Partitions data folders into training and testing. Ratio specifies how large
         each of these are. The independent parameter loosely controls whether the success/fail
         ratio of the whole dataset is reflected in the partition.
         """
@@ -287,28 +286,34 @@ class DataSet:
         fnames = filename_by_field.keys()
         
         file_list_len  = len(self.filename_by_field[list(fnames)[0]])
-        num_training   = int(ratio * file_list_len)
+        num_training   = int(self._ratio * file_list_len)
+        
+        ##THIS IS A NEW RANDOM SEED. Need this to match between train and test!
+        np.random.seed(30)
         randomized_order = np.random.permutation(file_list_len)
 
         if num_training == 0 or num_training == file_list_len:
-            self._raise_bad_partition_error(file_list_len, ratio, num_training)
+            self._raise_bad_partition_error(file_list_len, num_training)
             
+        print(num_training," ***** ",file_list_len)
+        
+        # TODO: Implement the independent selection.
         training_indices = randomized_order[0:num_training]
         testing_indices = randomized_order[num_training:]
 
         self._training_files = FilenameByField(
-            {field : filename_by_field[field][training_indices] for field in fnames},
+            {field : filename_by_field[field][training_indices] for field in list(fnames)},
             filename_by_field.shape())
 
         self._testing_files = FilenameByField(
-            {field : filename_by_field[field][testing_indices] for field in fnames},
+            {field : filename_by_field[field][testing_indices] for field in list(fnames)},
             filename_by_field.shape())
 
         
-    def _raise_bad_partition_error(self, file_list_len, ratio, num_training):
+    def _raise_bad_partition_error(self, file_list_len, num_training):
         msg_template = "Partition of {} files not possible with ratio {}. Results in {} with 0 files."
         bad_set = "training set" if num_training == 0 else "testing set"
-        error_msg = msg_template.format(file_list_len, ratio, bad_set)
+        error_msg = msg_template.format(file_list_len, self._ratio, bad_set)
         raise RuntimeError(error_msg)
         
         
@@ -337,7 +342,7 @@ def BasicSampler(filename_by_field, max_size):
     return data_gruppe
 
 
-def RandomSampler(filename_by_field, max_size):
+def RandomSampler(filename_by_field, max_size, verbose=False):
     """
     Select a random subset of data from all the filenames inside 'filename_by_field', up to the
     limit specified by 'maxsize'.
@@ -354,23 +359,27 @@ def RandomSampler(filename_by_field, max_size):
         data_gruppe.concatenate(data_gruppe_item)
 
         # Check the total data size
-        print("before truncating, data_gruppe size was:   ", data_gruppe.data_size(), "   bytes.")
+        if verbose:
+            print("before truncating, data_gruppe size was:   ",data_gruppe.data_size(), "   bytes.")
         if data_gruppe.data_size() >= max_size:
             data_gruppe.truncate_size_to(max_size)
             print("after truncating, data_gruppe size is now:   ",
                   data_gruppe.data_size(), "   bytes.")
                 
-            print("max size allowed was:   ", int(max_size), "   bytes.")
+            print("max size allowed was:   ",int(max_size), "   bytes.")
             break
     return data_gruppe
 
 
-def RandomBalancedSampler(filename_by_field, max_size, success_ratio=0.3):
+def RandomBalancedSampler(filename_by_field, max_size): # TODO: allow arg passing of ratio
     """
     Select a random subset of data from all the filenames inside 'filename_by_field', up to the
     limit specified by 'maxsize'.
     """
     fnames = filename_by_field.keys()
+
+    # Hardcoded ratio constat
+    success_ratio = 0.5
     
     # Divide successes and fails.
     import re
@@ -385,10 +394,11 @@ def RandomBalancedSampler(filename_by_field, max_size, success_ratio=0.3):
         {field : [a for a in filename_by_field[field] if fpat.search(a)] for field in fnames},
         filename_by_field.shape())
     
-    suc_gruppe  = RandomSampler(successes, max_size * success_ratio)
-    fail_gruppe = RandomSampler(failures,  max_size * (1-success_ratio))
+    suc_gruppe  = RandomSampler(successes, max_size * success_ratio, False)
+    fail_gruppe = RandomSampler(failures,  max_size * (1-success_ratio), False)
     
     fail_gruppe.concatenate(suc_gruppe)
+    
     return fail_gruppe
 
 
@@ -406,20 +416,15 @@ def ReformatData(data_gruppe, is_data_labelled, NumMats):
             Y = data_gruppe[a][:,0]
             Y = (Y<1000)*1
             Y = Y.ravel()
-            print("yo 1 took: ",process_time()-start," time.")
-
             
         elif a[0:3] == "DCM":
             datum = data_gruppe[a]
             mat = np.reshape(datum, (datum.shape[0],21,21))
             mat = np.asarray([MatrixComplexity(m) for m in mat])
             DCM_stack_list += [mat]
-            print("yo 2 took: ",process_time()-start," time.")
-
 
         else:
             data_gruppe[a] = np.asarray(data_gruppe[a], dtype='float64')
-            print("yo 3 took: ",process_time()-start," time.")
 
 
     mid = process_time()
@@ -447,17 +452,13 @@ def ReformatData(data_gruppe, is_data_labelled, NumMats):
 def _reformat_ys(y):
     pass
 
+
 def _reformat_dcm_matrices(Ms):
     ds = int(np.sqrt(dataShape["DCM01-*.csv"]-1))
     test_M = np.reshape(test_M,(len(test_M),ds,ds,NumMats))
-
-    # Experiment for Emre
-    #test_M[:,:,:,1] = np.asarray([np.matmul(m,m) for m in test_M[:,:,:,0]])
-
-    if NumMats==1:
-        test_M = test_M[:,:,:,0]
-
+    if NumMats==1: test_M = test_M[:,:,:,0]
     return test_M
+    
     
 def MatrixComplexity2(M): #total number of digits per element in each matrix
     W = []
@@ -467,21 +468,20 @@ def MatrixComplexity2(M): #total number of digits per element in each matrix
     return np.array(W)
 
 
-def ReadDataAndFormat(input_dir, dataShape, NumMats, data_part,
+def ReadDataAndFormat(input_dir, dataShape, NumMats, data_part, ratio,
                       Sampler=BasicSampler, verbose=False):
     start = process_time()
-
-    data_set = DataSet(input_dir, dataShape, verbose=verbose)
-
+    data_set = DataSet(input_dir, dataShape, ratio, verbose=verbose)
     if data_part == "training":
+        data_set.partition() ## KH Moved this 7/19. I think we only want to call this once for the following.
         data_gruppe, is_data_labelled = data_set.sample_training(sampler=Sampler)
     elif data_part == "testing":
+        data_set.partition() ## KH Moved this 7/19. I think we only want to call this once for the following.
         data_gruppe, is_data_labelled = data_set.sample_testing(sampler=Sampler)
     elif data_part == "all":
         data_gruppe, is_data_labelled = data_set.read_all()
     else:
         raise ValueError("Invalid value for data_part: {}".format(data_part))
-        
     mid = process_time()
     outdat = ReformatData(data_gruppe, is_data_labelled, NumMats)
     end = process_time()
@@ -491,23 +491,40 @@ def ReadDataAndFormat(input_dir, dataShape, NumMats, data_part,
     return outdat
 
 
+#def KH_circumvent(input_dir, dataShape, NumMats, data_part, ratio, Sampler=BasicSampler, verbose=False):
+#    #this is just to do the 4nomial case, for KH. different file format.
+#    #this is the alternative to ReadDataAndFormat that generated Table 9 in paper.
+#
+#    data_set = DataSet(input_dir, dataShape, ratio, verbose=verbose)
+#    data_gruppe, is_data_labelled = data_set.read_all()
+#    for a in data_gruppe:
+#        num_samps = len(data_gruppe[a])
+#
+#    scrambler = KHpermutation()
+#    stopat = int(ratio * len(scrambler))
+#
+#    if data_part == "training":
+#        for a in data_gruppe:
+#            data_gruppe[a] = data_gruppe[a][scrambler[:stopat]]
+#    elif data_part == "testing":
+#        for a in data_gruppe:
+#            data_gruppe[a] = data_gruppe[a][scrambler[stopat:]]
+#
+#    outdat = ReformatData(data_gruppe, is_data_labelled, NumMats)
+#    return outdat
+
+
 def PerformPCA(PCAk, train_x):
     print("\n\nSTEP 1 (OPTIONAL): Doing PCA for dimension reduction...")
     pca = PCA(n_components=PCAk)
     pca.fit(train_x)
     print("...singular values of input dataset: \n", pca.singular_values_,"\n")
-    #    print(pca.explained_variance_ratio_)
     #    plt.plot(pca.singular_values_)
-    #    plt.title("Ratios of variances explained by Principal Components of Inputs")
-    #    plt.title("Singular Values of the 5-nomial Connected Graph Inputs (Polynomial Pairs)")
-    #    plt.show()
     train_x_pca = pca.transform(train_x) #dimension reduced by PCA. First PCAk comp proj.
-
     return train_x_pca,pca
 
 
 def UpSampleToBalance(X,y,M):
-    
     print("\n\nSTEP 2 (OPTIONAL): Balancing Dataset...")
     y0 = y.ravel()
     y_succ,y_fail = y[y0==1],y[y0==0]
@@ -531,8 +548,6 @@ def UpSampleToBalance(X,y,M):
 def MatrixComplexity(M,out="W"): #total number of digits in each matrix
     #out can be "W" or "ND"
     W,N,D = [],[],[]
-    
-    
     char2delete = "-"," ","}","{",'"'
     def replacechar(string):
         for char in char2delete:
@@ -555,13 +570,11 @@ def MatrixComplexity(M,out="W"): #total number of digits in each matrix
             D.append(Wj[:,1])
         return np.asarray(N),np.asarray(D)
         
+        
 def MatrixStats(Ns,Ds):
-    
     def kl_divergence(p, q):
         return -np.sum(np.where(p*q != 0, p * np.log(p / q), 0))
-
     maxM,kldM,sumM,lenM,avgM,entM = [],[],[],[],[],[]
-    
     for N,D in zip(Ns,Ds):
         NpD = N+D
         maxM.append(np.max(NpD))
@@ -570,34 +583,5 @@ def MatrixStats(Ns,Ds):
         lenM.append(len(NpD[NpD>0]))
         avgM.append(np.sum(NpD)/len(NpD[NpD>0])) #average over nonzero elements
         entM.append(scipy.stats.entropy(NpD))
-        titles = ["MAXIMUM","KL DIVERGENCE","SUM","LENGTH OF NONZEROS","AVERAGE OVER NONZEROS","ENTROPY"]
-
+        titles = ["MAXIMUM", "KL DIVERGENCE", "SUM", "LENGTH OF NONZEROS", "AVERAGE OVER NONZEROS", "ENTROPY"]
     return np.asarray([maxM,kldM,sumM,lenM,avgM,entM]),titles
-
-
-#convert 1x70 edge vector (for use with MLP) to 2x4x4x4 tensor (for use with CNN).
-# this function works for binary coefficient polynomials only
-def vector2tensor(e):
-
-    t = np.full((5,5,5),0)     #this will be the tensor for this edge
-    vlen = int(len(e)/2)
-
-    #e will be 1x70. split in two.
-    v1,v2 = e[:vlen],e[vlen:]
-    #monomial_basis = [x^4, x^3*y, x^3*z, x^3*w, x^2*y^2, x^2*y*z, x^2*y*w, x^2*z^2, x^2*z*w, x^2*w^2, x*y^3, x*y^2*z, x*y^2*w, x*y*z^2, x*y*z*w, x*y*w^2, x*z^3, x*z^2*w, x*z*w^2, x*w^3, y^4, y^3*z, y^3*w, y^2*z^2, y^2*z*w, y^2*w^2, y*z^3, y*z^2*w, y*z*w^2, y*w^3, z^4, z^3*w, z^2*w^2, z*w^3, w^4]# ordered, consistent between Kathryn/Emre/Avi
-    monomial_index = np.asarray([[4, 0, 0], [3, 1, 0], [3, 0, 1], [3, 0, 0], [2, 2, 0], [2, 1, 1], [2, 1, 0], [2, 0, 2], [2, 0, 1], [2, 0, 0], [1, 3, 0], [1, 2, 1], [1,
-    2, 0], [1, 1, 2], [1, 1, 1], [1, 1, 0], [1, 0, 3], [1, 0, 2], [1, 0,
-     1], [1, 0, 0], [0, 4, 0], [0, 3, 1], [0, 3, 0], [0, 2, 2], [0, 2,
-    1], [0, 2, 0], [0, 1, 3], [0, 1, 2], [0, 1, 1], [0, 1, 0], [0, 0,
-    4], [0, 0, 3], [0, 0, 2], [0, 0, 1], [0, 0, 0]])   # Keys [at] CoefficientRules[m /. w -> 1][[All, 1]]
-    
-    #ugly loop
-    for i in range(vlen):
-        if v1[i]==1:            # TODO: Make more general than just 0,1.
-            t[monomial_index[i,0],monomial_index[i,1],monomial_index[i,2]]+=1
-        if v2[i]==1:            # TODO: Make more general than just 0,1.
-            t[monomial_index[i,0],monomial_index[i,1],monomial_index[i,2]]+=2
-
-    #this way, if t[i,j,k]= 1, then v1 contributed one. if t[i,j,k]= 2, then v2 contributed one. if t[i,j,k]= 3, then they both contributed one. if else, else.
-    
-    return t
