@@ -7,9 +7,6 @@
 
 import os, subprocess
 
-assert subprocess.call(["python3", "AI_train.py"],
-                       cwd=os.path.join(SRC_ABS_PATH, "neural-network",''))
-
-assert subprocess.call(["python3", "AI_analyze.py"],
-                       cwd=os.path.join(SRC_ABS_PATH, "neural-network",''))
+assert subprocess.call(["python3", "AI_train.py"]) == 0
+assert subprocess.call(["python3", "AI_analyze.py"]) == 0
 
