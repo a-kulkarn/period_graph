@@ -4,12 +4,15 @@
 # Initialize Paths
 ##############################################
 
+# Ensure we are in the directory of the make file.
+cd $(dirname $0)
+
 currentDir=$(pwd)
 pathToRepo=$(pwd)
+pathToModule="$pathToRepo/period_graph"
+
+cd $pathToRepo
 cd src
-
-
-cd $(dirname $0)
 pathToSrc=$(pwd)
 
 # Set the path to PeriodSuite
@@ -40,7 +43,7 @@ git checkout sage9
 # Initialize Data and logging directories
 ##############################################
 
-cd $pathToRepo
+cd $pathToModule
 mkdir training-data
 mkdir neural_network_input
 mkdir process-status
@@ -85,10 +88,10 @@ cd $pathToSrc
 
 # set directory names in sage
 cat > SAGE_CONFIG.py << EOF
-SELF_PATH = "$pathToRepo/"
+SELF_PATH = "$pathToModule/"
 SRC_ABS_PATH = "$pathToSrc/"
 pathToSuite = "$pathToSuite/"
-TRAINING_PATH = "$pathToRepo/training-data/"
+TRAINING_PATH = "$pathToModule/training-data/"
 PYTHON3_BIN = "$(which python3)"
 PHASE_I_ALARM  = 30;
 PHASE_II_ALARM = 21*(5*60)
@@ -116,8 +119,8 @@ EOF
 
 cat > neural-network/NNCONFIG.py << EOF
 NN_PATH = "$pathToSrc/neural-network/"
-INPUT_DIR = "$pathToRepo/training-data/"
-SAGE_INPUT_DIR = "$pathToRepo/neural_network_input/"
+INPUT_DIR = "$pathToModule/training-data/"
+SAGE_INPUT_DIR = "$pathToModule/neural_network_input/"
 PYTHON3_LOCAL_SITE_PKG = "$HOME/.local/lib/python3.7/site-packages/"
 
 # Data management parameters.
