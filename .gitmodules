@@ -2,5 +2,5 @@
 	path = period_graph/src/suite
 	url = https://github.com/emresertoz/PeriodSuite.git
 [submodule "src/neural-network/SpecialModels"]
-	path = period_graph/src/neural-network/SpecialModels/SpecialModels
+	path = period_graph/src/neural-network/SpecialModels2
 	url = https://github.com/a-kulkarn/pg_archived_neural_networks.git

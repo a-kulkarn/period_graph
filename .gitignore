@@ -59,4 +59,5 @@ ai_probabilities
 **/neural-network/TrainingOutputs/
 **/neural-network/TestingOutputs/
 **/neural-network/EvalOutputs/
+**/neural_network_input/
 
