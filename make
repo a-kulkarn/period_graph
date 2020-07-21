@@ -11,7 +11,7 @@ currentDir=$(pwd)
 pathToRepo=$(pwd)
 pathToModule="$pathToRepo/period_graph"
 
-cd $pathToRepo
+cd $pathToModule
 cd src
 pathToSrc=$(pwd)
 
