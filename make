@@ -58,7 +58,7 @@ mkdir DifferentiateCohomology-failed
 cd $pathToSrc
 mkdir vertex-data
 mkdir root-quartics
-mkdir user_input
+#mkdir user_input
 mkdir quartics-cache
 
 
