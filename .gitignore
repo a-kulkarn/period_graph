@@ -31,6 +31,8 @@
 *.py~
 *.md~
 *make~
+*/__pycache__/*
+
 
 src/Z-integration-return-codes.sobj
 src/carry-periods.sage.backup
@@ -52,7 +54,6 @@ src/tests/.test_quartics
 src/neural-network/SavedModels/
 src/neural-network/TrainingOutputs/
 src/neural-network/TestingOutputs/
-src/neural-network/__pycache__/*
 *CONFIG*
 src/neural-network/NNCONFIG.py
 src/backup-manifest
@@ -66,6 +67,4 @@ src/failed-ode-step/
 src/magma/MAGMA_CONFIG~
 src/archive/
 *.backup
-*__init__.sage*
-__init__.py
 tests/.test_quartics
