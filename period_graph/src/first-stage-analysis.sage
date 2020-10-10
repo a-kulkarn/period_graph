@@ -59,7 +59,7 @@ class quartic_data:
 
     def quartic_long_list(self):
         q = self.quartic()
-        return [q.monomial_coefficient(m) for m in mons]
+        return [q.monomial_coefficient(m) for m in self.mons]
 
     def perm_as_matrix(self):
         A = zero_matrix(ZZ, len(self.perm))
