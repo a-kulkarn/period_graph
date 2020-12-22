@@ -23,9 +23,9 @@ class ModelBundle:
             raise NotImplementedError
 
         try:
-            self.base_network_name = kwds['base_network'].name()
+            self._base_network_name = kwds['base_network'].name()
         except KeyError:
-            self.base_network_name = None
+            self._base_network_name = None
                 
         self.model_id = model_id
         self.PCA = PCA
@@ -36,7 +36,7 @@ class ModelBundle:
         return self.model_id
 
     def base_network_name(self):
-        return self.base_network_name
+        return self._base_network_name
 
     def components(self):
         return self.PCA, self.MLP, self.CNN
@@ -95,7 +95,7 @@ class ModelBundle:
                 # Print key-value pairs according to special formatting instructions
                 # Determined by dictionary keys.
 
-                B = ["Base network (None if new): " + str(self.base_network_name),
+                B = ["Base network (None if new): " + str(self.base_network_name()),
                      "",
                      "Setup parameters:",
                      tall_dic_str(setup_dic),
