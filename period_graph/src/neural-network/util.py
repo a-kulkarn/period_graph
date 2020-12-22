@@ -274,12 +274,19 @@ def ReadPredictions(NN_PATH, uniquenum):
     
     return file_data
     
-def PrintConfusion(test_y,yNN,yCN,yEN):
-    print("\n\n\n*********************")
+def PrintConfusion(test_y, yNN, yCN, yEN, show_legend=True):
+    if show_legend:
+        print("\n*********************")
+        print(" LEGEND:\n")
+        print(" The entries of the confusion matrix C_{i,j} are the number of objects ")
+        print(" with label 'i' assigned label 'j'. In this case, the first row corresponds ")
+        print(" to 'failed' labels.")
+        
+    print("\n*********************")
     print("\n Confusion Matrix, Filter 1 (MLP):\n",    confusion_matrix(test_y,yNN))
     print("\n Confusion Matrix, Filter 2 (CNN):\n",    confusion_matrix(test_y,yCN))
     print("\n Confusion Matrix, given BOTH filters:\n",confusion_matrix(test_y,yEN))
-    print("*********************\n")
+    print("\n*********************\n")
 
 def discrete_matshow(data):
 #    #get discrete colormap
