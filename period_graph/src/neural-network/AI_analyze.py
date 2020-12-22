@@ -42,19 +42,12 @@ from data_handling import *
 
 np.random.seed(random_seed)
 
-fnames = sorted(list(dataShape.keys()))
-
 if INPUT_DIR == "/Users/Heal/Dropbox/Research/EAK/4-monomial-complete/":
     sampler = BasicSampler
 else:
     sampler = RandomBalancedSampler
 print("Using sampler: ", sampler.__name__)
 
-# File containing pretrained networks.
-ModelNum = '_newest' if ReadNewest else UseModel
-
-print("***\n\nTHESE WILL BE INPUT TO AI_analyze.py:\n")
-print("   Using trained model:    ", ModelNum, "\n\n***")
 
 #**************************************************
 # Main script.
@@ -71,8 +64,16 @@ print(sum(test_y))
 #***************************************************
 ### PRINT, SAVE, AND VISUALIZE RESULTS FOR TEST DATA
 
+# File containing pretrained networks.
+ModelNum = '_newest' if ReadNewest else UseModel
 MB = fetch_model(NN_PATH, ReadNewest, ModelNum)
 pCN, rCN, pNN, rNN, pEN, rEN = MB.evaluate_models(test_all)
+ModelNum = MB.name()
+
+
+print("***\n\nTHESE WILL BE INPUT TO AI_analyze.py:\n")
+print("   Using trained model:    ", ModelNum, "\n\n***")
+
 
 PlotsOn = True                 #broken for now TODO: Investigate?
 paramsNN    = [ModelNum]

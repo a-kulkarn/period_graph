@@ -62,7 +62,7 @@ else: #load pre-trained models from computer
 #np.savetxt(csvfile, indices_out, delimiter=",")
 #np.savetxt(csv_newest, indices_out, delimiter=",")
 
-BM.save(os.path.join(NN_PATH, 'SavedModels/',''), also_to_newest=True)
+BM.save(os.path.join(NN_PATH, 'SavedModels/',''), also_to_newest=False)
 
 print("***\n\nTHIS WILL BE INPUT TO AI_analyze.py:\n")
 print("   Naming this training: ", BM.name(), "\n\n***")
@@ -78,4 +78,4 @@ setup_params = {"Num cohomology matrices / pair" : NumMats,
                 "Training set filename" : '"{}"'.format(INPUT_DIR)}
 
 BM.save_parameters(os.path.join(NN_PATH, "SavedModels", ''), setup_dic=setup_params,
-                   params_dic=network_architecture_hyperparameters, also_to_newest=True)
+                   params_dic=network_architecture_hyperparameters, also_to_newest=False)

@@ -141,13 +141,10 @@ class ModelBundle:
 
         return pCN, ranking(pCN), pNN, ranking(pNN), pEN, ranking(pEN)
 
-    
-# Alias because I did conventions wrong at first...
-model_bundle = ModelBundle
 
 # Loader function to reconstruct object.
 def load_model_bundle(path, model_id):
-    B = model_bundle(model_id)
+    B = ModelBundle(model_id)
     B._load(path)
     return B
 
@@ -166,7 +163,17 @@ def fetch_model(NN_PATH, ReadNewest, UseModel):
     MODEL_DIRS = ["SpecialModels", "SavedModels"]
     if ReadNewest:
         model_path = 'SavedModels'
-        model_name = '_newest'
+        fname_list = os.listdir(os.path.join(NN_PATH, model_path))
+
+        if len(fname_list) == 0:
+            error_msg = ("No models present in the 'SavedModels' directory. Please either train " 
+                         + "A network using the provided utilities, or use one of the "
+                         + "presupplied models in the 'SpecialModels' directory.")
+            raise IOError(error_msg)
+        else:
+            key_func = lambda fname : os.path.getmtime(os.path.join(NN_PATH, model_path, fname))
+            model_name = max(fname_list, key=key_func)
+
     else:
         model_name = UseModel
 
@@ -179,3 +186,4 @@ def fetch_model(NN_PATH, ReadNewest, UseModel):
             raise IOError(error_msg)
         
     return load_model_bundle(os.path.join(NN_PATH, model_path), model_name)
+
