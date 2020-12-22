@@ -77,5 +77,20 @@ setup_params = {"Num cohomology matrices / pair" : NumMats,
                 "Random seed" : random_seed,
                 "Training set filename" : '"{}"'.format(INPUT_DIR)}
 
-BM.save_parameters(os.path.join(NN_PATH, "SavedModels", ''), setup_dic=setup_params,
+model_save_path = os.path.join(NN_PATH, "SavedModels", '')
+BM.save_parameters(model_save_path, setup_dic=setup_params,
                    params_dic=network_architecture_hyperparameters, also_to_newest=False)
+
+
+## Save the information about the training set.
+
+success_percent_str = "{} / {}".format(np.sum(train_y), train_y.shape[0])
+
+data_info = {"MAX_INPUT_DATA_SIZE" : MAX_INPUT_DATA_SIZE,
+             "Train/test ratio" : ttratio,
+             "Random seed" : random_seed,
+             "Sampler name" : sampler.__name__,
+             "Percentage successes in training set" : success_percent_str,
+             "Training set filename" : '"{}"'.format(INPUT_DIR)}
+
+BM.save_training_data_info(model_save_path, data_info)

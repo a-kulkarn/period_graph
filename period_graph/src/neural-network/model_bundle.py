@@ -117,6 +117,23 @@ class ModelBundle:
             print("\nNetwork parameters written to:   ",fname,"\n")
         return
 
+    
+    def save_training_data_info(self, path, data_dic):
+        """
+        Writes information regarding the preparation of the training data to the model folder.
+        """
+        fname = os.path.join(path, self.name(), "TrainDataInfo" + self.name() + ".txt")
+
+        notice_msg = ("NOTE: the random seed has no effect on RandomSampler, as there is a "
+                      + "separate seed set in that sampler. Future improvements might remove "
+                      + "this issue. For the time being, we will be untroubled by this "
+                      + "non-critical loss of generality.")
+        
+        B = ["Data info:", tall_dic_str(data_dic), '', notice_msg, '\n']
+        with open(fname, 'w') as f:
+            f.write('\n'.join(B))
+    
+        return
 
             
     def evaluate_models(self, data):
