@@ -48,62 +48,11 @@ def OptimalROCSup(p_predict, y_true, ttl, zepplin=False):
     Return the *supremum* of the T such that the ROC distance is optimal.
     Note that as the aforementioned T is never actually in this set.
     """
-    #def ROCDistance(point):
-    #    return math.sqrt(point[0] ** 2 + (1-point[1]) ** 2)
-
-#    # 1. Split predict vector into y[i]=1, y[i]=0 and sort both by probability.
-#    true_fails = sorted(p_predict[y_true == 0])
-#    true_succs = sorted(p_predict[y_true == 1])
-#    total_true_fails = len(true_fails)
-#    total_true_succs = len(true_succs)
-#    # 3. Define the ROC point function
-#    # roc_point = (false positive rate, true positive rate)
-#    ROC_Point = (lambda num_FP, num_TP :
-#                 (float(num_FP)/total_true_fails, float(num_TP)/total_true_succs))
-#    # 4. Walk along the lattice points of the ROC curve, starting from (0,0) (i.e, T=1).
-#    #    Record the tops of the line segments.
-#
-#    #### Begin suffering.... ####
-#    num_false_positives = 0
-#    num_true_positives  = 0
-#    i = total_true_fails
-#    j = total_true_succs - 1
-#    T = 1
-#    roc_points = collections.deque()
-#    while i >= 0:
-#        # Deal with duplicate T. (Search backward for the last T.)
-#        if i > 0 and true_fails[i-1] == T:
-#            num_false_positives += 1
-#            i -= 1
-#            continue
-#        # Search backward for the last success with probability T.
-#        while j >= 0 and true_succs[j] >= T:
-#            j -= 1
-#            num_true_positives += 1
-#        # Plot the ROC point for T
-#        roc_points.append((T, ROC_Point(num_false_positives, num_true_positives)))
-#        # If there are no more true successes, no need to continue.
-#        if j < 0:
-#            break
-#        # Update increment and T.
-#        i -= 1
-#        if i >= 0:
-#            T = true_fails[i]
-#    #### End C-style while loop. ####
-##    print(roc_points)
-
     fpr, tpr, thresholds = roc_curve(y_true,p_predict,pos_label=1)
     plt.plot(fpr,tpr,label=ttl)
     plt.title("ROC curves.")
     roc_dist = tpr**2+(1-fpr)**2
     T_best = np.argmax(roc_dist)
-#    print("ROC OPTIMIZATION:")
-#    print("optimal index:        ", T_best)
-#    print("optimal point on ROC: ", (fpr[T_best],tpr[T_best]))
-#    print("optimal threshold:    ",thresholds[T_best])
-    
-    # 5. Compute the optimal ROC point.
-#    T_best = min(reversed(roc_points), key = (lambda x : ROCDistance(x[1])))
     
     if zepplin:
         print("Been dazed and confused for so long it's not true!")
@@ -172,7 +121,7 @@ def WriteConfusion(NN_PATH,uniquenum,paramsNN,paramsCN,test_y,yNN,yCN,yEN):
         f.write("\n\n*****************\n\nFilter 1 (ReLU MLP) Params:\n")
         if len(paramsNN)==1:
             #loading a pre-trained model
-            B = "Loading from pre-trained MLP model: "+str(paramsNN)
+            B = "Loading from pre-trained MLP model: " + str(paramsNN)
         else:
             strg = ["\nWidth of each hidden layer:   ",
                     "\nRegularization penalty parameter:   ",
@@ -187,7 +136,7 @@ def WriteConfusion(NN_PATH,uniquenum,paramsNN,paramsCN,test_y,yNN,yCN,yEN):
         f.write("\n\n*****************\n\nFilter 2 (CNN) Params:\n")
         if len(paramsCN)==1:
             #loading a pre-trained model
-            B = "Loading from pre-trained MLP model: "+str(paramsCN)
+            B = "Loading from pre-trained CNN model: " + str(paramsCN)
         else:
             strg = ["\nBatch size for training:   ",
                     "\nEpoch length:   ",
@@ -200,11 +149,12 @@ def WriteConfusion(NN_PATH,uniquenum,paramsNN,paramsCN,test_y,yNN,yCN,yEN):
         f.write(str(confusion_matrix(test_y,yCN)))
         f.write("\n\n*****************\n\nConfusion Matrix for Ensemble:\n")
         f.write(str(confusion_matrix(test_y,yEN)))
-        f.write("\n\n*****************\n\nThis all came out of AI_eval.py\n\n")
+        f.write("\n\n*****************\n")
         
-    print("\nConfusion matrices written to:   ",fname,"\n")
+    print("\nConfusion matrices written to:   ", fname, "\n")
     return
-    
+
+
 def WritePredictions(NN_PATH, INPUT_DIR, rand_seed, readnum, uniquenum, datain):
 
     # Internally keep training transcripts, for future analysis.

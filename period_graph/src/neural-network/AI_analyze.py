@@ -92,9 +92,13 @@ yEN = yCN*yNN # EN -- "Ensemble of networks"
 
 print(sum(yEN),yEN.shape)
 
-# Note: We are aiming for a 'large lower right' and 'very small upper right' of the confusion matrices.
-argsin = [NN_PATH,"",paramsNN,paramsCN,test_y,yNN,yCN,yEN]
-WriteConfusion(*argsin)
+# NOTE: We are aiming for a 'large lower right' and 'very small upper right'
+#       of the confusion matrices.
+
+for val in ["_newest", ModelNum]:
+    argsin = [NN_PATH, val, paramsNN, paramsCN, test_y, yNN, yCN, yEN]
+    WriteConfusion(*argsin)
+
 PrintConfusion(test_y, yNN, yCN, yEN) #prints confusion matrices per filter
 
 
