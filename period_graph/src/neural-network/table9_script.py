@@ -122,10 +122,18 @@ from sklearn.metrics import confusion_matrix
 import util
 
 
-#**************************************************
+###################################################
 # Main script.
 
+# 
+# NOTE: We are aiming for a 'large lower right' and 'very small upper right'
+#       of the confusion matrices for the trained network.
+#
+# Terminology: EN -- "Ensemble of networks"
+
 ####################
+
+######
 ## Data setup.
 
 sampler = RandomSampler if dataStream==1 else RandomBalancedSampler
@@ -143,44 +151,46 @@ test_x, test_y, test_M = test_data
 
 ## Display training data stats
 if train_y is None:
-    raise RuntimeError("Data in input directory is unlabelled. Directory: {}".format(INPUT_DIR))
-    
+    error_msg = "Data in input directory is unlabelled. Directory: {}".format(INPUT_DIR)
+    raise RuntimeError(error_msg)
+
 print("\n\n# successes in original training set: ",
       np.sum(train_y), " / ", train_y.shape[0],
       " total training samples.")
 
 
-####################
-## Run training protocol.
-# Note: We are aiming for a 'large lower right' & 'very small upper right' of the confusion matrices.
+######
+## Training/Testing loop
+
+for dummy_var in range(5):
+
+    ######
+    ## Run training protocol.
+
+    # ** Actually training/loading the network.
+    if not FineTuneInTraining:
+        BM, paramsNN, paramsCN = train_model_bundle(train_data, NumMats,
+                                                    **network_architecture_hyperparameters)
+    else:
+        old_model_bundle = fetch_model(NN_PATH, ReadNewest, UseModel)
+        BM = finetune_bundle(old_model_bundle, train_data, **finetune_hyperparameters)
 
 
-# ** Actually training/loading the network.
-if not FineTuneInTraining:
-    BM, paramsNN, paramsCN = train_model_bundle(train_data, NumMats,
-                                                **network_architecture_hyperparameters)
-else:
-    old_model_bundle = fetch_model(NN_PATH, ReadNewest, UseModel)
-    BM = finetune_bundle(old_model_bundle, train_data, **finetune_hyperparameters)
+    ## Save the training run info.
+    save_training_info(NN_PATH=NN_PATH, BM=BM, INPUT_DIR=INPUT_DIR, NumMats=NumMats,
+                       random_seed=random_seed, MAX_INPUT_DATA_SIZE=MAX_INPUT_DATA_SIZE,
+                       ttratio=ttratio, sampler=sampler, train_y=train_y)
 
+    ######
+    ## Run testing protocol.
 
-## Save the training run info.
-save_training_info(NN_PATH=NN_PATH, BM=BM, INPUT_DIR=INPUT_DIR, NumMats=NumMats,
-                   random_seed=random_seed, MAX_INPUT_DATA_SIZE=MAX_INPUT_DATA_SIZE,
-                   ttratio=ttratio, sampler=sampler, train_y=train_y)
+    # Load file containing pretrained networks and evaluate on testing data.
+    MB = fetch_model(NN_PATH, ReadNewest, UseModel)
+    pCN, rCN, pNN, rNN, pEN, rEN = MB.evaluate_models(test_data)
 
+    ModelNum = MB.name()
+    print("   Using trained model:    ", ModelNum, "\n\n***")
 
-# TESTING THE NETWORK
-# NOTE: We are aiming for a 'large lower right' and 'very small upper right'
-#       of the confusion matrices.
-#
-# Terminology: EN -- "Ensemble of networks"
+    WriteTrainingConfusionStats(ModelNum, pCN, pNN, pEN, test_y,
+                                print_matrices=True, write_table9=False)
 
-# Load file containing pretrained networks and evaluate on testing data.
-MB = fetch_model(NN_PATH, ReadNewest, UseModel)
-pCN, rCN, pNN, rNN, pEN, rEN = MB.evaluate_models(test_data)
-
-ModelNum = MB.name()
-print("   Using trained model:    ", ModelNum, "\n\n***")
-
-WriteTrainingConfusionStats(ModelNum, pCN, pNN, pEN, test_y, print_matrices=True, write_table9=False)
