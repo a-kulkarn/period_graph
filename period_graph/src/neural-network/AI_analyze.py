@@ -1,9 +1,6 @@
 
 # Python 3.7.3.
 
-# SET CURRENT WORKING DIRECTORY.
-import os, sys
-
 ###
 # In CONFIG
 # -- paths
@@ -16,23 +13,16 @@ import os, sys
 # -- hyperparameter config.
 from NNCONFIG import *
 
-## THIS FILE saves only to TestingOutputs
 
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-warnings.simplefilter(action='ignore', category=RuntimeWarning)
-
-import os, sys, scipy.io, scipy.linalg, time, random, pickle
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2' #don't display warnings; only errors
-import numpy as np, tensorflow as tf, matplotlib.pylab as plt
+# Suppress warnings from tensorflow; only display errors
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2' 
+import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-from util import *
-from numpy import genfromtxt
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import confusion_matrix, roc_curve
-from keras.models import load_model
-from time import time
 
+# Remaining dependencies
+import numpy as np, matplotlib.pylab as plt
+from util import *
 from model_bundle import *
 from data_handling import *
 
