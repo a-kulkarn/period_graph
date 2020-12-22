@@ -33,9 +33,10 @@ print("\n\n# successes in original training set: ",
       np.sum(train_y)," / ",train_y.shape[0],
       " total training samples.")
 
-old_model_id = '_newest' if ReadNewest else OldModel
-old_model_bundle = load_model_bundle(os.path.join(NN_PATH, 'SavedModels', ''), old_model_id)
+#old_model_id = '_newest' if ReadNewest else OldModel
+#old_model_bundle = load_model_bundle(os.path.join(NN_PATH, 'SavedModels', ''), old_model_id)
 
+old_model_bundle = fetch_model(NN_PATH, ReadNewest, UseModel)
 BM = finetune_bundle(old_model_bundle, BatchSize, EpochNum, data, Balancing=Balancing)
 
 ### SAVE MODEL ITSELF TO FILE

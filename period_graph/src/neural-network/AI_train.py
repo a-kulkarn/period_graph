@@ -46,9 +46,10 @@ if not FineTuneInTraining:
     
 else: #load pre-trained models from computer
 
-    old_model_id = '_newest' if ReadNewest else OldModel
-    old_model_bundle = load_model_bundle(os.path.join(NN_PATH, 'SavedModels', ''), old_model_id)
+    #old_model_id = '_newest' if ReadNewest else OldModel
+    #old_model_bundle = load_model_bundle(os.path.join(NN_PATH, 'SavedModels', ''), old_model_id)
 
+    old_model_bundle = fetch_model(NN_PATH, ReadNewest, UseModel)
     BM = finetune_bundle(old_model_bundle, data, **finetune_hyperparameters)
     paramsNN,paramsCN   = [OldModel],[OldModel]
 
