@@ -26,7 +26,6 @@ from util import *
 from model_bundle import *
 from data_handling import *
 
-
 #**************************************************
 # Setup input parameters.
 
@@ -109,3 +108,13 @@ PrintConfusion(test_y, yNN, yCN, yEN_opt_th_pEN) #prints confusion matrices per 
 
 if PlotsOn and sum(test_y)>0 and sum(test_y)<len(test_y):
     WritePlots(NN_PATH,"",pNN,pCN,pEN,test_y)
+
+
+    
+if True: # Only run this on the dev machine to generate article information.
+    from sklearn.metrics import confusion_matrix
+    import util
+    C_mat = confusion_matrix(test_y, yEN)
+    util._WriteTable9Data(os.path.join(NN_PATH, 'EvalOutputs', 'table9data.txt'),
+                          MB, ttratio, C_mat)
+    

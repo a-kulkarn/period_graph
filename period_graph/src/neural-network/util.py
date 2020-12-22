@@ -155,6 +155,23 @@ def WriteConfusion(NN_PATH,uniquenum,paramsNN,paramsCN,test_y,yNN,yCN,yEN):
     return
 
 
+def _WriteTable9Data(fname, MB, ttratio, confusion_mat):
+    """
+    Writes to a file specified by 'fname'. Each row of the file is of the form
+
+        <model id>, <train-test ratio (alpha)>, [C.ravel()], TP+TN/(FP+FN)
+
+    where 'C' is the confusion matrix of the ensemble network. Table 9 refers to the table
+    in the article accompanying this software.
+    """
+    with open(fname, 'a') as F:
+        A = confusion_mat
+        conf_rat = (A[0,0] + A[1,1])/(A[0,1] + A[1,0])
+        line = ', '.join([MB.name(), str(ttratio), str(A.ravel()), str(conf_rat)])
+        F.write(line+'\n')
+        
+    return
+
 def WritePredictions(NN_PATH, INPUT_DIR, rand_seed, readnum, uniquenum, datain):
 
     # Internally keep training transcripts, for future analysis.
