@@ -35,6 +35,9 @@ class ModelBundle:
     def name(self):
         return self.model_id
 
+    def base_network_name(self):
+        return self.base_network_name
+
     def components(self):
         return self.PCA, self.MLP, self.CNN
     
