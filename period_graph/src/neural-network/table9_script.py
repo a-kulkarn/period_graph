@@ -162,7 +162,7 @@ print("\n\n# successes in original training set: ",
 ######
 ## Training/Testing loop
 
-for dummy_var in range(5):
+for dummy_var in range(7):
 
     ######
     ## Run training protocol.
@@ -192,5 +192,5 @@ for dummy_var in range(5):
     print("   Using trained model:    ", ModelNum, "\n\n***")
 
     WriteTrainingConfusionStats(ModelNum, pCN, pNN, pEN, test_y,
-                                print_matrices=True, write_table9=False)
+                                print_matrices=True, write_table9=True)
 
