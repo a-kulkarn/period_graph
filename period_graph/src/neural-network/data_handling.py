@@ -294,8 +294,6 @@ class DataSet:
 
         if num_training == 0 or num_training == file_list_len:
             self._raise_bad_partition_error(file_list_len, num_training)
-            
-        print(num_training," ***** ",file_list_len)
         
         # TODO: Implement the independent selection.
         training_indices = randomized_order[0:num_training]

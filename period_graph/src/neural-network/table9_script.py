@@ -162,7 +162,7 @@ print("\n\n# successes in original training set: ",
 ######
 ## Training/Testing loop
 
-for dummy_var in range(7):
+for dummy_var in range(2):
 
     ######
     ## Run training protocol.

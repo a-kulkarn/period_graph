@@ -41,8 +41,26 @@ def generate_network_name(reference_network=None):
         return reference_network + '+' + generate_network_name() + '_FT'
     
 
-def finetune_bundle(old_model_bundle, data, EpochNum, BatchSize, StepSizeMLP, StepSizeCNN, Balancing=True):
+def finetune_bundle(old_model_bundle, data, **kwds):
 
+    # Parse
+    try:
+        EpochNum = kwds['EpochNum']
+    except KeyError:
+        EpochNum = 5
+
+    try:
+        BatchSize = kwds['BatchSize']
+    except KeyError:
+        BatchSize = 32
+
+    try:
+        Balancing = kwds['Balancing']
+    except KeyError:
+        Balancing = True
+
+    ## Begin actual function code ##
+        
     train_x,train_y,train_M = data
     if Balancing:
         train_x,train_y,train_M = UpSampleToBalance(train_x,train_y,train_M)
@@ -61,8 +79,8 @@ def finetune_bundle(old_model_bundle, data, EpochNum, BatchSize, StepSizeMLP, St
 
     bs,ep = BatchSize,EpochNum
     additional_layer,act = 1024,"relu"
-    finetuned_NN = MLPFineTune(saved_NN,additional_layer,act,StepSizeMLP)
-    finetuned_CN = CNNFineTune(saved_CN,additional_layer,act,StepSizeCNN)
+    finetuned_NN = MLPFineTune(saved_NN,additional_layer,act)
+    finetuned_CN = CNNFineTune(saved_CN,additional_layer,act)
 
     print("\n\nSTEP 3f: Fine-tuning Filter 1 (MLP using X,Y)... ")
     finetuned_NN.fit(train_x, train_y, batch_size=bs, epochs=ep, verbose=1) # Main MLP-fine-tuning.
@@ -136,7 +154,7 @@ def CNNClassifier(k,l,ss):
          model.add(Conv2D(64, kernel_size=3, activation='relu',input_shape=(l, l, l)))
     elif l==21:
         model.add(Conv2D(64, kernel_size=3, activation='relu',input_shape=(l, l, k)))
-#    model.add(Conv2D(32, kernel_size=3, activation='relu'))
+    # model.add(Conv2D(32, kernel_size=3, activation='relu'))
     model.add(Conv2D(16, kernel_size=3, activation='relu'))
     # model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())  #converts 2D feature maps to 1D feature vectors
@@ -145,8 +163,9 @@ def CNNClassifier(k,l,ss):
     model.add(Dense(1, activation='sigmoid'))
 
     sgd = optimizers.SGD(lr=ss, decay=1e-6, momentum=0.9, nesterov=True)
+    opti = optimizers.Adam()
     model.compile(loss='binary_crossentropy',
-                  optimizer=sgd,
+                  optimizer=opti,
                   metrics=['accuracy'])
     return model
 
@@ -157,17 +176,15 @@ def MLPClassifier0(hlsizes,ss,act,insz):
         model.add(Dense(hlsizes[i+1], kernel_initializer="uniform", activation=act))
     model.add(Dense(1, kernel_initializer="uniform", activation='sigmoid'))
 
-
-    print("STEP SIZE IS:         ",ss)
-
-    sgd = optimizers.SGD(lr=ss, momentum=0.9, nesterov=True)
+    #sgd = optimizers.SGD(lr=ss, momentum=0.9, nesterov=True)
+    opti = optimizers.Adam()
     model.compile(loss='binary_crossentropy',
-                  optimizer=sgd,
+                  optimizer=opti,
                   metrics=['accuracy'])
     return model
 
 
-def CNNFineTune(oldmodel,numlay,act,ss):
+def CNNFineTune(oldmodel,numlay,act):
     model = Sequential()
     model.add(oldmodel)
      
@@ -175,13 +192,14 @@ def CNNFineTune(oldmodel,numlay,act,ss):
     model.add(Dense(numlay, activation=act))
     model.add(Dense(1, activation='sigmoid'))
     
-    sgd = optimizers.SGD(lr=ss, decay=1e-6, momentum=0.9, nesterov=True)
+    #sgd = optimizers.SGD(lr=ss, decay=1e-6, momentum=0.9, nesterov=True)
+    opti = optimizers.Adam()
     model.compile(loss='binary_crossentropy',
-                  optimizer=sgd,
+                  optimizer=opti,
                   metrics=['accuracy'])
     return model
 
-def MLPFineTune(oldmodel,numlay,act,ss):
+def MLPFineTune(oldmodel,numlay,act):
     model = Sequential()
     model.add(oldmodel)
 
@@ -189,8 +207,9 @@ def MLPFineTune(oldmodel,numlay,act,ss):
     model.add(Dense(numlay, activation=act))
     model.add(Dense(1, activation='sigmoid'))
     
-    sgd = optimizers.SGD(lr=ss, momentum=0.9, nesterov=True)
+    #sgd = optimizers.SGD(lr=ss, momentum=0.9, nesterov=True)
+    opti = optimizers.Adam()
     model.compile(loss='binary_crossentropy',
-                  optimizer=sgd,
+                  optimizer=opti,
                   metrics=['accuracy'])
     return model
