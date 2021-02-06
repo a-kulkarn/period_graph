@@ -12,9 +12,9 @@ Saves and parallelizes computations of periods of (quartic) hypersurfaces
 3) Run `./make`
 
 ## Associated article
-This software originated as an accompaniment to the article `article-name`. It can be found at `link`. The version of the software on the release date of the article is available on the `branch-name` branch.
+This software originated as an accompaniment to the article `Deep Learning Gauss-Manin Connections`. It can be found at `https://arxiv.org/abs/2007.13786`. The version of the software on the release date of the article is available on the `article` branch.
 
-We have made the associated dataset is available at: https://www.dropbox.com/sh/a9dq3wa6dr61ahf/AADfn1L1QYZ5-ajDUrxISsnBa?dl=0
+We have made the associated dataset available [here](https://www.dropbox.com/sh/a9dq3wa6dr61ahf/AADfn1L1QYZ5-ajDUrxISsnBa?dl=0)
 
 Its contents are:
 - A magma readable list of tuples, consisting of
