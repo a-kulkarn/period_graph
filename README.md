@@ -14,6 +14,22 @@ Saves and parallelizes computations of periods of (quartic) hypersurfaces
 ## Associated article
 This software originated as an accompaniment to the article `article-name`. It can be found at `link`. The version of the software on the release date of the article is available on the `branch-name` branch.
 
+We have made the associated dataset is available at: https://www.dropbox.com/sh/a9dq3wa6dr61ahf/AADfn1L1QYZ5-ajDUrxISsnBa?dl=0
+
+Its contents are:
+- A magma readable list of tuples, consisting of
+  - quartics,
+  - the computed precision on their periods,
+  - the Picard number,
+  - the Picard lattice,
+  - the coordinates of the hyperplane section,
+  - the endomorphism algebra, and
+  - whether the K3 surface has real multiplication.
+
+- A compressed archive of all of the periods we have computed, as sage objects.
+
+- A compressed archive of all of the periods we have computed, readable by magma (using PeriodSuite's loadPeriods function).
+
 ## Basic useage
 The main exported functionality of this package are the functions
 
