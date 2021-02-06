@@ -26,6 +26,9 @@ Its contents are:
   - the endomorphism algebra, and
   - whether the K3 surface has real multiplication.
 
+- A compressed archive of all of the periods we have computed, as sage objects.
+
+- A compressed archive of all of the periods we have computed, readable by magma (using PeriodSuite's loadPeriods function).
 
 ## Basic useage
 The main exported functionality of this package are the functions
